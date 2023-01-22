@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class Task {
+            constructor(title, text) {
+                this.title = title;
+                this.text = text;
+                this.status = false;
+            }
+
+            changeTextTask(title, text) {
+                this.#changeValue(title, text);
+            }
+
+            changeStatusTask(title) {
+                this.#changeValue(title);
+            }
+
+            static agreement() {
+                return confirm('Are you sure?');
+            }
+
+            #changeValue(title, value) {
+                let answer = Task.agreement();
+
+                if (answer) {
+                    value ? this.text = value : this.status = !this.status;
+                }
+            }
+        }
+
+        class ToDoList {
+            listTask = [];
+
+            addTask(task) {
+                if (task instanceof Task && this.#checkUniq(task.title, this.listTask)) {
+                    this.listTask.push(task);
+                }
+            }
+
+            deleteTask(title) {
+                const index = this.listTask.findIndex(item => item.title == title);
+                if (index != -1 && Task.agreement()) this.listTask.splice(index, 1);
+            }
+
+            getCountTask() {
+                return this.listTask.reduce((info, note) => {
+                    if (!info.total) {
+                        info.total = this.listTask.length;
+                    }
+
+                    if (!info[note.status]) {
+                        info[note.status] = 0;
+                    }
+
+                    info[note.status]++;
+
+                    return info;
+                }, {});
+            }
+
+            #checkUniq(title, array) {
+                return !array.find(note => note.title === title);
+            }
+        }
+    </script>
+</body>
+
+</html>
