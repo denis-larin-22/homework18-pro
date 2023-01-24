@@ -10,45 +10,52 @@
 
 <body>
     <script>
-        class Task {
+        class Note {
+            status = false;
+
             constructor(title, text) {
                 this.title = title;
                 this.text = text;
-                this.status = false;
+            }
+
+            editTitle(title, agreement) {
+                if (agreement) this.title = title;
+            }
+
+            editText(text, agreement) {
+                if (agreement) this.text = text;
+            }
+
+            markAsComplete() {
+                this.status = true;
             }
         }
 
-        class ToDoList {
-            listTask = [];
 
-            addTask(title, text) {
-                if (this.#checkUniq(title, this.listTask)) {
-                    this.listTask.push(new Task(title, text));
-                }
+        class List {
+            notesList = [];
+
+            addNote(title, text) {
+                if (List.checkUniq(title, this.notesList)) this.notesList.push(new Note(title, text));
             }
 
-            deleteTask(title) {
-                const index = this.listTask.findIndex(item => item.title == title);
-                if (index != -1 && ToDoList.agreement()) this.listTask.splice(index, 1);
+            editNoteTitle(index, title, agreement) {
+                this.notesList.at(index).editTitle(title, agreement);
             }
 
-            changeStatusTask(title) {
-                this.#changeValue(title);
+            editNoteText(index, text, agreement) {
+                this.notesList.at(index).editText(text, agreement);
             }
 
-            changeTextTask(title, text) {
-                this.#changeValue(title, text);
+            setCompleteNote(index) {
+                this.notesList.at(index).markAsComplete();
             }
 
-            getCountTask() {
-                return this.listTask.reduce((info, note) => {
-                    if (!info.total) {
-                        info.total = this.listTask.length;
-                    }
+            getCountNotes() {
+                return this.notesList.reduce((info, note) => {
+                    if (!info.total) info.total = this.notesList.length;
 
-                    if (!info[note.status]) {
-                        info[note.status] = 0;
-                    }
+                    if (!info[note.status]) info[note.status] = 0;
 
                     info[note.status]++;
 
@@ -56,28 +63,10 @@
                 }, {});
             }
 
-            static agreement() {
-                return confirm('Are you sure?');
+            static checkUniq(title, array) {
+                return !array.find(item => item.title === title);
             }
-
-            #changeValue(title, value) {
-                let answer = ToDoList.agreement();
-
-                if (answer) {
-                    this.listTask.forEach(item => {
-                        if (item.title == title) {
-                            value ? item.text = value : item.status = !item.status;
-                        }
-                    })
-                }
-            }
-
-            #checkUniq(title, array) {
-                return !array.find(note => note.title === title);
-            }
-        }
-
-
+        }  
     </script>
 </body>
 
